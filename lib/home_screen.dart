@@ -175,12 +175,7 @@ class _HomeState extends State<Home> {
                             userInput += '.';
                             setState(() {});
                           }),
-                      MyButton(
-                          buttonName: 'DEL',
-                          onpress: () {
-                            // userInput.replaceAll(length.toString(), '');
-                            // setState(() {});
-                          }),
+                      MyButton(buttonName: 'DEL', onpress: () {}),
                       MyButton(
                           buttonName: '=',
                           buttonColor: orangeColor,
