@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'constant.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   var userInput = '';
   var answer = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +29,18 @@ class _HomeState extends State<Home> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        userInput.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          userInput.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Text(
                         answer.toString(),
@@ -46,7 +56,7 @@ class _HomeState extends State<Home> {
                   children: [
                     Row(children: [
                       MyButton(
-                        buttonName: userInput.length <= 1 ? 'AC' : 'C',
+                        buttonName: userInput.length < 1 ? 'AC' : 'C',
                         onpress: () {
                           userInput = '';
                           answer = '';
@@ -175,12 +185,18 @@ class _HomeState extends State<Home> {
                             userInput += '.';
                             setState(() {});
                           }),
-                      MyButton(buttonName: 'DEL', onpress: () {}),
+                      MyButton(
+                          buttonName: 'DEL',
+                          onpress: () {
+                            userInput =
+                                userInput.substring(0, userInput.length - 1);
+                            setState(() {});
+                          }),
                       MyButton(
                           buttonName: '=',
                           buttonColor: orangeColor,
                           onpress: () {
-                            userInput += '=';
+                            equalto();
                             setState(() {});
                           }),
                     ]),
@@ -191,5 +207,17 @@ class _HomeState extends State<Home> {
             ],
           ),
         )));
+  }
+
+  void equalto() {
+    String finalInput = userInput;
+    finalInput = userInput.replaceAll('x', '*');
+    Parser p = Parser();
+    Expression exp = p.parse(finalInput);
+    ContextModel model = ContextModel();
+
+    double evaluation = exp.evaluate(EvaluationType.REAL, model);
+
+    answer = evaluation.toString();
   }
 }
